@@ -1,7 +1,13 @@
 import { Outlet, Navigate } from 'react-router-dom';
-
+import { useEffect, useState } from 'react';
+import { getToken } from '@/lib/constant';
 const AuthLayout = () => {
-  const isAutenticated = false;
+  const [isAutenticated, setIsAuthenticated] = useState(false);
+  const token = getToken();
+
+  useEffect(() => {
+    setIsAuthenticated(!!token);
+  }, [token]);
 
   return (
     <>

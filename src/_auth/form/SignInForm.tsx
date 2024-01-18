@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as z from "zod"
+import { useState } from 'react';
+import axios from 'axios';
 
 import { Button } from "@/components/ui/button"
 import { SigninValidation } from '@/lib/validation';
@@ -17,10 +19,13 @@ import { Input } from "@/components/ui/input"
 import Loader from "@/components/ui/shared/Loader";
 
 
-const SignInForm = () => {
-  const isLoading = false;
 
-  // 1. Define your form.
+const SignInForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
     defaultValues: {
@@ -29,12 +34,25 @@ const SignInForm = () => {
     },
   })
   
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SigninValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-  }
+  const onSubmit = async (values: z.infer<typeof SigninValidation>) => {
+    setIsLoading(true);
+    setMessage("");
+    try {
+      const response = await axios.post("https://api.escuelajs.co/api/v1/auth/login", values);
+      console.log("----->", response.data);
+  
+      localStorage.setItem("access_token", response.data.access_token);
+      navigate("/");
+    } catch (error) {
+      if (error.response.data.statusCode == 401) {
+        setMessage("Sorry, your password is incorrect. Please double-check your password.");
+      } else {
+        setMessage('');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -64,7 +82,7 @@ const SignInForm = () => {
                 <FormControl>
                   <Input type="password" className="shad-input" {...field} />
                 </FormControl>
-                <FormMessage className="shad-form_message" />
+                <FormMessage className="shad-form_message"/>
               </FormItem>
             )}
           />
@@ -75,9 +93,10 @@ const SignInForm = () => {
               </div>
             ): "Sign in"}
           </Button>
+          <FormMessage className="shad-form_message text-center">{message}</FormMessage>
           <p className="text-small-regular text-light-2 text-center mt-2">
-            Dont have an account?
-            <Link to="/sign-up" className="text-primary-500 text-small-semibold ml-1">Sign up</Link>
+            
+            <Link to="/forgot" className="text-primary-500 text-small-semibold ml-1">Forgot password?</Link>
           </p>
         </form>
       </div>
