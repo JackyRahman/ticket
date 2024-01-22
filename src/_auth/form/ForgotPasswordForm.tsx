@@ -36,9 +36,9 @@ const ForgotPasswordForm = () => {
 
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
+      <div className="sm:w-420 flex-center flex-col bg-white p-8 rounded-2xl">
         <img className="max-w-32" src="/assets/images/logo.svg" alt="logo" />
-        <h2 className="h3-bold md:h2-bold pd-5 sm:pt-12">Request reset password</h2>
+        <h2 className="h3-bold md:h2-bold pd-5 sm:pt-12 text-dark-2">Request reset password</h2>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
           <FormField
             control={form.control}
@@ -60,7 +60,7 @@ const ForgotPasswordForm = () => {
               </div>
             ): "Forget Password"}
           </Button>
-          <p className="text-small-regular text-light-2 text-center mt-2">
+          <p className="text-small-regular text-gray-500 text-center mt-2">
             Back to login page?
             <Link to="/sign-in" className="text-primary-500 text-small-semibold ml-1">login?</Link>
           </p>

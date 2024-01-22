@@ -15,11 +15,11 @@ const App = () => {
 
   const token = getToken();
 
-  useEffect(() => {
-    if (!token) {
-      navigate('/sign-in');
-    }
-  }, [navigate, token]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate('/sign-in');
+  //   }
+  // }, [navigate, token]);
 
   return (
     <main className='flex h-screen'>
